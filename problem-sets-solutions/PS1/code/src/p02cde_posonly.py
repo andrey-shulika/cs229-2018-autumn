@@ -46,7 +46,7 @@ def main(train_path, valid_path, test_path, pred_path):
     model_y = LogisticRegression()
     model_y.fit(x_train, y_train)
 
-    util.plot(x_test, y_test, model_y.theta, 'output/p02d.png')
+    util.plot(x_test, t_test, model_y.theta, 'output/p02d.png')
 
     y_pred = model_y.predict(x_test)
     np.savetxt(pred_path_d, y_pred > 0.5, fmt='%d')
@@ -54,7 +54,8 @@ def main(train_path, valid_path, test_path, pred_path):
     # Problem (e)
     x_valid, y_valid = util.load_dataset(valid_path, label_col='y', add_intercept=True)
 
-    alpha = np.mean(model_y.predict(x_valid))
+    valid_pred = model_y.predict(x_valid)
+    alpha = np.mean(valid_pred[y_valid == 1])
 
     correction = 1 + np.log(2 / alpha - 1) / model_y.theta[0]
     util.plot(x_test, t_test, model_y.theta, 'output/p02e.png', correction)
